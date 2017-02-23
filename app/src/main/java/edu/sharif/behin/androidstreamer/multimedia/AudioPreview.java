@@ -47,7 +47,7 @@ public class AudioPreview extends WaveformView implements Closeable {
         buffer = new short[bufferSize/2];
         audioRecord = new AudioRecord(MediaRecorder.AudioSource.DEFAULT,AudioEncoder.AUDIO_SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO,AudioFormat.ENCODING_PCM_16BIT,bufferSize);
         if (audioRecord.getState() != AudioRecord.STATE_INITIALIZED) {
-            Log.e("Behin", "Audio Record can't initialize!");
+            Log.e(AudioPreview.class.getName(), "Audio Record can't initialize!");
             return;
         }
         audioRecord.startRecording();
@@ -67,7 +67,7 @@ public class AudioPreview extends WaveformView implements Closeable {
                             encoder.offerEncoder(byteBuf.array());
                         }
                     }catch (Exception e){
-                        Log.e(AudioPreview.class.getName(), "error occurred while running thread", e);
+                        Log.e(AudioPreview.class.getName(), "Error occurred while running thread", e);
                         break;
                     }
                 }

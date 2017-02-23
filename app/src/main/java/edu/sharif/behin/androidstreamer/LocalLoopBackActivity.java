@@ -20,14 +20,21 @@ import edu.sharif.behin.androidstreamer.network.LocalLoopBackStream;
 
 public class LocalLoopBackActivity extends AppCompatActivity {
 
+    private AudioEncoder audioEncoder;
+    private AudioDecoder audioDecoder;
+    private VideoDecoder videoDecoder;
+    private VideoEncoder videoEncoder;
+    private CameraPreview cameraPreview;
+    private AudioPreview audioPreview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_loop_back);
         setTitle("Local Loop Back Demo");
 
-        final CameraPreview cameraPreview = (CameraPreview) findViewById(R.id.camera);
-        final AudioPreview audioPreview = (AudioPreview) findViewById(R.id.mic);
+        cameraPreview = (CameraPreview) findViewById(R.id.camera);
+        audioPreview = (AudioPreview) findViewById(R.id.mic);
 
         final SurfaceView view = (SurfaceView) findViewById(R.id.decodedView);
 
@@ -45,14 +52,14 @@ public class LocalLoopBackActivity extends AppCompatActivity {
 
         try {
 
-            VideoEncoder encoder = new VideoEncoder(cameraPreview,senderHandler);
-            encoder.start();
+            videoEncoder = new VideoEncoder(cameraPreview,senderHandler);
+            videoEncoder.start();
 
             view.getHolder().addCallback(new SurfaceHolder.Callback() {
                 @Override
                 public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                    VideoDecoder decoder = new VideoDecoder(receiverHandler,view.getHolder().getSurface());
-                    decoder.start();
+                    videoDecoder = new VideoDecoder(receiverHandler,view.getHolder().getSurface());
+                    videoDecoder.start();
                 }
 
                 @Override
@@ -71,20 +78,28 @@ public class LocalLoopBackActivity extends AppCompatActivity {
         }
 
         try {
-            AudioEncoder encoder = new AudioEncoder(audioPreview,senderHandler);
-            encoder.start();
+            audioEncoder = new AudioEncoder(audioPreview,senderHandler);
+            audioEncoder.start();
 
-            AudioDecoder decoder = new AudioDecoder(receiverHandler);
-            decoder.start();
+            audioDecoder = new AudioDecoder(receiverHandler);
+            audioDecoder.start();
 
         }catch (Exception e){
             e.printStackTrace();
         }
 
-
-
-
-
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        audioDecoder.close();
+        audioDecoder.close();
+        videoEncoder.close();
+        videoDecoder.close();
+
+        cameraPreview.stop();
+        audioPreview.stop();
+
+    }
 }

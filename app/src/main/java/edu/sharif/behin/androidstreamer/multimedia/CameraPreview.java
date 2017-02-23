@@ -40,7 +40,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     private void setFields() {
         camera = Camera.open();
-        //Todo: sensitivity
         isBackFacing = true;
 
         // Install a SurfaceHolder.Callback so we get notified when the
@@ -74,19 +73,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             });
             Camera.Parameters parameters = camera.getParameters();
             parameters.setPreviewFormat(ImageFormat.YV12);
-            //Exchange for Rotation
-//            List<Camera.Size> sizes =  parameters.getSupportedPreviewSizes();
-//            int minDiff = VideoEncoder.VIDEO_PIXEL_COUNT*100;
-//            int loc=0;
-//            for(int i=0;i<sizes.size();i++){
-//                int curSize = sizes.get(i).width*sizes.get(i).height;
-//                if(Math.abs(curSize-VideoEncoder.VIDEO_PIXEL_COUNT)<minDiff){
-//                    minDiff = Math.abs(curSize-VideoEncoder.VIDEO_PIXEL_COUNT);
-//                    loc=i;
-//                }
-//            }
-//            previewWidth  = sizes.get(loc).width;
-//            previewHeight = sizes.get(loc).height;
             parameters.setPreviewSize(previewWidth, previewHeight);
             camera.setParameters(parameters);
             camera.setDisplayOrientation(90);
@@ -147,7 +133,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
                 }catch (RuntimeException e)
                 {
-                    Log.e("Error","Camera failed to open: " + e.getLocalizedMessage());
+                    Log.e(CameraPreview.class.getName(),"Camera failed to open: " + e.getLocalizedMessage());
                 }
             }
 
@@ -158,7 +144,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     camera = Camera.open(i);
                 }catch (RuntimeException e)
                 {
-                    Log.e("Error","Camera failed to open: " + e.getLocalizedMessage());
+                    Log.e(CameraPreview.class.getName(),"Camera failed to open: " + e.getLocalizedMessage());
                 }
             }
         }
