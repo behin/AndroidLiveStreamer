@@ -21,5 +21,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button webSocketButton = (Button) findViewById(R.id.local_web_socket_button);
+        webSocketButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LocalWebSocketActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

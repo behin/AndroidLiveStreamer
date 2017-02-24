@@ -1,9 +1,5 @@
-package edu.sharif.behin.androidstreamer.network;
+package edu.sharif.behin.androidstreamer.local;
 
-import android.os.Environment;
-
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 
 public class LocalLoopBackStream {
-    public Queue<byte[]> buffer=new ConcurrentLinkedQueue<>();
+    private final Queue<byte[]> buffer=new ConcurrentLinkedQueue<>();
 
     public OutputStream getOutputStream(){
         return new OutputStream() {
@@ -40,9 +36,8 @@ public class LocalLoopBackStream {
             public int read() throws IOException {
                 throw new RuntimeException("Read Int");
             }
-            public int read(byte[] b) throws IOException {
+            public int read(byte[] bytes) throws IOException {
                 synchronized (buffer) {
-
                     if(buffer.size()==0) {
                         try {
                             buffer.wait();
@@ -51,8 +46,8 @@ public class LocalLoopBackStream {
                         }
                     }
                     byte[] item = buffer.poll();
-                    System.arraycopy(item,0,b,0,b.length);
-                    return b.length;
+                    System.arraycopy(item,0,bytes,0,bytes.length);
+                    return bytes.length;
                 }
 
             }

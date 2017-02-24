@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import edu.sharif.behin.androidstreamer.multimedia.AudioDecoder;
@@ -15,7 +14,7 @@ import edu.sharif.behin.androidstreamer.multimedia.CameraPreview;
 import edu.sharif.behin.androidstreamer.multimedia.FrameHandler;
 import edu.sharif.behin.androidstreamer.multimedia.VideoDecoder;
 import edu.sharif.behin.androidstreamer.multimedia.VideoEncoder;
-import edu.sharif.behin.androidstreamer.network.LocalLoopBackStream;
+import edu.sharif.behin.androidstreamer.local.LocalLoopBackStream;
 
 
 public class LocalLoopBackActivity extends AppCompatActivity {
