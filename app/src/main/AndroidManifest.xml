@@ -31,7 +31,9 @@
         </activity>
         <activity android:name=".BufferLoopBackActivity" />
         <activity android:name=".LocalLoopBackActivity" />
-        <activity android:name=".RelayLoopBackActivity"></activity>
+        <activity android:name=".RelayLoopBackActivity" />
+        <activity android:name=".VideoStreamerActivity" />
+        <activity android:name=".VideoPlayerActivity"></activity>
     </application>
 
 </manifest>

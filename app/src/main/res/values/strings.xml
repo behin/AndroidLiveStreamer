@@ -6,6 +6,11 @@
         Video stream is pushed from source to viewer through this local web socket.</string>
     <string name="relay_loop_back_info">In this demo your device act as both camera and viewer.
         Video stream is pushed from source to viewer through the relay server.</string>
-
+    <string name="video_streamer_info">In this demo your device act as camera.
+        You should use another device as the viewer.
+        Video stream is pushed from source to viewer through the relay server.</string>
+    <string name="video_player_info">In this demo your device act as viewer.
+        There should be another device as camera.
+        Video stream is pushed from source to viewer through the relay server.</string>
 
 </resources>

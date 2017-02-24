@@ -39,5 +39,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        Button videoStreamerButton = (Button) findViewById(R.id.video_streamer);
+        videoStreamerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, VideoStreamerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button videoPlayerButton = (Button) findViewById(R.id.video_player);
+        videoPlayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

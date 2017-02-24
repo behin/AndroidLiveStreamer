@@ -18,45 +18,30 @@ import edu.sharif.behin.androidstreamer.multimedia.CameraPreview;
 import edu.sharif.behin.androidstreamer.network.SourceWebSocketHandler;
 import edu.sharif.behin.androidstreamer.network.ViewerWebSocketHandler;
 
-public class LocalLoopBackActivity extends AppCompatActivity implements SourceWebSocketHandler.ISourceWebSocketHandlerStateChangeListener {
-
-    private CameraPreview cameraPreview;
-    private AudioPreview audioPreview;
+public class VideoPlayerActivity extends AppCompatActivity {
 
 
-
-    private SourceWebSocketHandler sourceWebSocketHandler;
     private ViewerWebSocketHandler viewerWebSocketHandler;
 
-    private AppCompatTextView sourceStateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_local_loop_back);
-        setTitle("Local Loop Back Demo");
-
-        cameraPreview = (CameraPreview) findViewById(R.id.camera);
-        audioPreview = (AudioPreview) findViewById(R.id.mic);
-        sourceStateTextView = (AppCompatTextView) findViewById(R.id.source_state);
+        setContentView(R.layout.activity_video_player);
+        setTitle("Video Player Demo");
 
         final SurfaceView view = (SurfaceView) findViewById(R.id.decodedView);
 
-        ImageButton swap = (ImageButton) findViewById(R.id.button);
-        swap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cameraPreview.swapCamera();
-            }
-        });
 
-        LocalWebSocketServer.startServer();
 
-        sourceWebSocketHandler = new SourceWebSocketHandler(Constants.DEFAULT_SOURCE_UUID,cameraPreview,audioPreview,this);
+        AppCompatTextView relayServerTextView = (AppCompatTextView) findViewById(R.id.relay_server);
+        relayServerTextView.setText("Relay Server : "+Constants.SERVER_ADDRESS);
+
+
         view.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                viewerWebSocketHandler = new ViewerWebSocketHandler(Constants.DEFAULT_VIEWER_UUID,view.getHolder().getSurface());
+                viewerWebSocketHandler = new ViewerWebSocketHandler(Constants.DEFAULT_VIEWER_UUID,Constants.SERVER_ADDRESS,view.getHolder().getSurface());
             }
 
             @Override
@@ -87,27 +72,11 @@ public class LocalLoopBackActivity extends AppCompatActivity implements SourceWe
     protected void onStop() {
         super.onStop();
         try {
-            sourceWebSocketHandler.close();
             viewerWebSocketHandler.close();
         }catch (IOException e){
             Log.e(LocalWebSocketServer.class.getName(),"Cannot Close Handlers",e);
         }
 
-        cameraPreview.stop();
-        audioPreview.stop();
     }
 
-    @Override
-    public void onStateChanged(SourceWebSocketHandler.SourceState oldState, SourceWebSocketHandler.SourceState newState) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(sourceWebSocketHandler.getState() == SourceWebSocketHandler.SourceState.STREAMING){
-                    sourceStateTextView.setText("Streaming");
-                }else {
-                    sourceStateTextView.setText("Waiting For Connection");
-                }
-            }
-        });
-    }
 }

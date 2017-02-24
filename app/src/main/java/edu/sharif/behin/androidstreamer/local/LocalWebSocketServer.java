@@ -27,10 +27,17 @@ import edu.sharif.behin.androidstreamer.network.StringMessage;
 public class LocalWebSocketServer extends WebSocketServer implements Closeable {
 
     public static final int PORT = 9987;
+    public static LocalWebSocketServer instance;
     private final Map<UUID, WebSocket> uuidConnections = new ConcurrentHashMap<>();
     private final Map<WebSocket, UUID> webSocketConnections = new ConcurrentHashMap<>();
 
-    public LocalWebSocketServer() {
+    public static void startServer(){
+        if(instance==null){
+            instance = new LocalWebSocketServer();
+        }
+    }
+
+    private LocalWebSocketServer() {
         super(new InetSocketAddress(PORT), Collections.<Draft>singletonList(new Draft_17()));
         start();
     }
