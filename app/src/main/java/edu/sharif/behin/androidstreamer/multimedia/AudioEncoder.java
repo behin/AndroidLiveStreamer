@@ -43,6 +43,7 @@ public class AudioEncoder {
 
     public void close() {
         try {
+            audioPreview.setEncoder(null);
             mediaCodec.stop();
             mediaCodec.release();
             handler.close();
@@ -81,7 +82,7 @@ public class AudioEncoder {
                 outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 0);
             }
         } catch (Throwable t) {
-            t.printStackTrace();
+            Log.e(AudioEncoder.class.getName(),"Error Occured : ",t);
         }
 
     }

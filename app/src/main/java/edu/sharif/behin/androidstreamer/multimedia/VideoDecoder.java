@@ -57,7 +57,6 @@ public class VideoDecoder implements Closeable{
 
                     } catch (Exception e) {
                         Log.e(VideoDecoder.class.getName(), "error on reading input stream", e);
-                        close();
                         break;
                     }
 

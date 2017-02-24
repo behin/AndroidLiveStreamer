@@ -59,7 +59,7 @@ public class ViewerWebSocketHandler implements ICommunicationHandler,Closeable {
     @Override
     public void handleBinaryMessage(UUID from,ByteBuffer message) {
         if(state == ViewerState.PLAYING){
-            if(from == sourceUUID){
+            if(from.equals(sourceUUID)){
                 networkInputStream.addDataToBuffer(message);
             }else {
                 Log.e(ViewerWebSocketHandler.class.getName(),"Message Came from wrong source : "+sourceUUID);

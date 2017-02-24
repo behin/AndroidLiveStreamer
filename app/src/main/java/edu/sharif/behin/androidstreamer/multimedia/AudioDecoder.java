@@ -18,6 +18,7 @@ public class AudioDecoder implements Closeable {
     private Thread decodeThread;
     private Thread playThread;
     private AudioTrack audioTrack;
+    private boolean isRunning = false;
 
     private MediaCodec mediaCodec;
 
@@ -27,10 +28,11 @@ public class AudioDecoder implements Closeable {
     }
 
     public void start(){
+        isRunning = true;
         decodeThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true){
+                while(isRunning){
                     try {
                         byte[] frame = handler.getAudioFrame();
 
@@ -45,10 +47,12 @@ public class AudioDecoder implements Closeable {
                             Log.e("Behin", "input buffer index is negative");
                         }
 
+                    } catch (IllegalStateException ise) {
+                        if(isRunning){
+                            Log.e(AudioDecoder.class.getName(), "illegal state on reading input stream", ise);
+                        }
                     } catch (Exception e) {
                         Log.e(AudioDecoder.class.getName(), "error on reading input stream", e);
-                        close();
-                        break;
                     }
                 }
             }
@@ -58,9 +62,15 @@ public class AudioDecoder implements Closeable {
         playThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true){
+                while(isRunning){
                     try {
-                        Thread.sleep(1);
+                        try {
+                            Thread.sleep(1);
+                        }catch (InterruptedException e){
+                            if(!isRunning){
+                                break;
+                            }
+                        }
                         MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
                         ByteBuffer[] outputBuffers = mediaCodec.getOutputBuffers();
                         int outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo,0);
@@ -80,10 +90,12 @@ public class AudioDecoder implements Closeable {
                         if(Thread.currentThread().isInterrupted()){
                             break;
                         }
-                    } catch (Exception e) {
+                    }catch (IllegalStateException ise) {
+                        if(isRunning){
+                            Log.e(AudioDecoder.class.getName(), "illegal state on reading input stream", ise);
+                        }
+                    }catch (Exception e) {
                         Log.e(AudioDecoder.class.getName(), "error on reading input stream", e);
-                        close();
-                        break;
                     }
                 }
             }
@@ -114,6 +126,7 @@ public class AudioDecoder implements Closeable {
 
     @Override
     public void close() {
+        isRunning = false;
         try {
             decodeThread.interrupt();
             playThread.interrupt();
@@ -122,7 +135,7 @@ public class AudioDecoder implements Closeable {
             audioTrack.stop();
             audioTrack.release();
         } catch (Exception e){
-            Log.e(VideoDecoder.class.getName(), "error on closing video decoder", e);
+            Log.e(AudioDecoder.class.getName(), "error on closing audio decoder", e);
         }
     }
 }

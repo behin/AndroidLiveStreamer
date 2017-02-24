@@ -19,6 +19,8 @@ public class FrameHandler implements Closeable{
     private Queue<Long> audioTimestamps;
     private Thread bufferThread;
 
+    private boolean isRunning=true;
+
     private long remoteTimestamp;
     private long localTimestamp;
 
@@ -64,11 +66,12 @@ public class FrameHandler implements Closeable{
         bufferThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (!Thread.currentThread().isInterrupted()){
+                while (!Thread.currentThread().isInterrupted() && isRunning){
                     try {
                         readFrame();
                     } catch (IOException e) {
                         Log.e(FrameHandler.class.getName(),"Read Exception : ",e);
+
                     }
                 }
 
@@ -224,7 +227,7 @@ public class FrameHandler implements Closeable{
                     }
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
-                    Log.e(FrameHandler.class.getName(),"Sleep Interrupted",e);
+                    return null;
                 }
             }
             return frame;
@@ -235,6 +238,7 @@ public class FrameHandler implements Closeable{
 
     @Override
     public void close() throws IOException {
+        isRunning = false;
         if(bufferThread != null){
             bufferThread.interrupt();
         }
