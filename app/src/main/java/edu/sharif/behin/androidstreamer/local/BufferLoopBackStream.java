@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Created by Behin on 1/30/2017.
  */
 
-public class LocalLoopBackStream {
+public class BufferLoopBackStream {
     private final Queue<byte[]> buffer=new ConcurrentLinkedQueue<>();
 
     public OutputStream getOutputStream(){

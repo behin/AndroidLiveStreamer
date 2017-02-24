@@ -74,6 +74,7 @@ public class NetworkInputStream extends InputStream{
             try {
                 wait();
             } catch (InterruptedException e) {
+
                 throw new IOException("Stream Interrupted.",e);
             }
         }

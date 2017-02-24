@@ -70,7 +70,9 @@ public class FrameHandler implements Closeable{
                     try {
                         readFrame();
                     } catch (IOException e) {
-                        Log.e(FrameHandler.class.getName(),"Read Exception : ",e);
+                        if(isRunning) {
+                            Log.e(FrameHandler.class.getName(), "Read Exception : ", e);
+                        }
 
                     }
                 }
@@ -177,7 +179,9 @@ public class FrameHandler implements Closeable{
                     }
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
-                    Log.e(FrameHandler.class.getName(),"Sleep Interrupted",e);
+                    if(isRunning) {
+                        Log.e(FrameHandler.class.getName(), "Sleep Interrupted", e);
+                    }
                 }
             }
             return frame;
@@ -207,7 +211,6 @@ public class FrameHandler implements Closeable{
                         wait();
                     } catch (InterruptedException e) {
                         Log.e(FrameHandler.class.getName(), "Thread Interrupted", e);
-                        close();
                     }
                 }
             }
@@ -222,7 +225,7 @@ public class FrameHandler implements Closeable{
                 try {
                     long sleepTime = frameTime-actualTime;
                     if(sleepTime>(100)){
-                        Log.e("Behin","Audio Timestamp Problem Sleep time : "+sleepTime);
+                        Log.e(FrameHandler.class.getName(),"Audio Timestamp Problem Sleep time : "+sleepTime);
                         sleepTime = 100;
                     }
                     Thread.sleep(sleepTime);

@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="edu.sharif.behin.androidstreamer.LocalLoopBackActivity">
+    tools:context="edu.sharif.behin.androidstreamer.BufferLoopBackActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,39 +22,25 @@
             android:text="Source Camera"/>
         <edu.sharif.behin.androidstreamer.multimedia.CameraPreview
             android:layout_width="200dp"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:id="@+id/camera" />
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/source_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Waiting for Connection"
-            android:textColor="#FFFFFF"
-            android:padding="2dp"
-            android:background="@color/colorPrimaryDark"/>
         <edu.sharif.behin.androidstreamer.multimedia.AudioPreview
             android:layout_width="200dp"
             android:layout_height="40dp"
             android:background="#000000"
             android:id="@+id/mic"/>
-
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Loopback Camera"/>
         <SurfaceView
             android:layout_width="200dp"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:id="@+id/decodedView" />
-        <Button
-            android:id="@+id/play_stop_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Play"/>
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/local_web_socket_info"/>
+            android:text="@string/local_loop_back_info"/>
     </LinearLayout>
 
 

@@ -83,7 +83,7 @@ public class VideoEncoder implements Closeable {
 
             }
         } catch (Throwable t) {
-            Log.e("AvcEncoder", "error occurred while encoding video", t);
+            Log.e(VideoEncoder.class.getName(), "error occurred while encoding video", t);
         }
 
     }
@@ -95,7 +95,7 @@ public class VideoEncoder implements Closeable {
             mediaCodec.release();
             handler.close();
         } catch (Exception e){
-            e.printStackTrace();
+            Log.e(VideoEncoder.class.getName(),"Error On Closing",e);
         }
     }
 

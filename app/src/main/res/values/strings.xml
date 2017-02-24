@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidStreamer</string>
+    <string name="app_name">Android Live Streamer</string>
     <string name="local_loop_back_info">In this demo your device act as both camera and viewer, the videos are encoded and decoded in the same environment.
         The data is being pushed from encoder to decoder using a simple queue.</string>
     <string name="local_web_socket_info">In this demo your device act as both camera and viewer and a simple local web socket server is activated.

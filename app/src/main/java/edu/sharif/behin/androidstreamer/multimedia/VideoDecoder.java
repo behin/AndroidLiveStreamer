@@ -19,6 +19,7 @@ public class VideoDecoder implements Closeable{
     private static final int BUFFER_SIZE = 128*1024;
 
     private MediaCodec mediaCodec;
+    private boolean isRunning =false;
 
     public VideoDecoder(FrameHandler frameHandler,Surface surface) {
         this.handler = frameHandler;
@@ -27,10 +28,11 @@ public class VideoDecoder implements Closeable{
     }
 
     public void start(){
+        isRunning = true;
         decodeThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true){
+                while(isRunning){
                     try {
                         byte[] frame = handler.getVideoFrame();
 
@@ -43,7 +45,7 @@ public class VideoDecoder implements Closeable{
                             inputBuffer.put(frame, 0, frame.length);
                             mediaCodec.queueInputBuffer(inputBufferIndex, 0, frame.length, 0, 0);
                         }else{
-                            Log.e("Behin", "input buffer index is negative");
+                            Log.e(VideoDecoder.class.getName(), "input buffer index is negative");
                         }
                         MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
                         int outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo,0);
@@ -55,9 +57,11 @@ public class VideoDecoder implements Closeable{
                             break;
                         }
 
+                    } catch (IllegalStateException e) {
+                        if(isRunning)
+                            Log.e(VideoDecoder.class.getName(), "error on reading input stream", e);
                     } catch (Exception e) {
                         Log.e(VideoDecoder.class.getName(), "error on reading input stream", e);
-                        break;
                     }
 
                 }
@@ -83,6 +87,7 @@ public class VideoDecoder implements Closeable{
 
     @Override
     public void close() {
+        isRunning = false;
         try {
             decodeThread.interrupt();
             mediaCodec.stop();

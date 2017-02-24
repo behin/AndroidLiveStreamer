@@ -215,7 +215,10 @@ public class ServerWebSocketHandler implements Closeable {
     }
 
     public void onClose(int code, String reason, boolean remote) {
-        Log.e(ServerWebSocketHandler.class.getName(), "Web Socket Disconnected: "+code+" reason: "+reason);
+        if(code != 1000) {
+            //Not Normal Close
+            Log.e(ServerWebSocketHandler.class.getName(), "Web Socket Disconnected: " + code + " reason: " + reason);
+        }
         start();
     }
 

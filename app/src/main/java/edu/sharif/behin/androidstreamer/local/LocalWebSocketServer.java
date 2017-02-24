@@ -50,6 +50,7 @@ public class LocalWebSocketServer extends WebSocketServer implements Closeable {
     @Override
     public synchronized void onClose(WebSocket conn, int code, String reason, boolean remote) {
         UUID uuid = webSocketConnections.get(conn);
+        Log.w(LocalWebSocketServer.class.getName(),"Close uuid:"+uuid+" code:"+code);
         webSocketConnections.remove(conn);
         uuidConnections.remove(uuid);
     }
@@ -58,7 +59,15 @@ public class LocalWebSocketServer extends WebSocketServer implements Closeable {
     public void onMessage(WebSocket session, ByteBuffer message) {
         UUID fromUUID = webSocketConnections.get(session);
         if(message.remaining()<(Long.SIZE/8)*3){
-            session.send("Bad message format");
+            StringMessage stringMessage=new StringMessage();
+            stringMessage.message = Constants.FAULT_MESSAGE;
+            stringMessage.uuid = Constants.SERVER_UUID;
+            try {
+                String result = new ObjectMapper().writeValueAsString(stringMessage);
+                session.send(result);
+            }catch (Exception e){
+                Log.e(ServerWebSocketHandler.class.getName(),"Cannot Parse String Message to Json",e);
+            }
             return;
         }
         ByteBuffer buffer = ByteBuffer.allocate(message.remaining());

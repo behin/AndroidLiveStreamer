@@ -13,8 +13,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button loopBackButton = (Button) findViewById(R.id.local_loop_back_button);
-        loopBackButton.setOnClickListener(new View.OnClickListener() {
+        Button bufferLoopBackButton = (Button) findViewById(R.id.buffer_loop_back_button);
+        bufferLoopBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, BufferLoopBackActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button localLoopBackButton = (Button) findViewById(R.id.local_loop_back_button);
+        localLoopBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, LocalLoopBackActivity.class);
@@ -22,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button webSocketButton = (Button) findViewById(R.id.local_web_socket_button);
-        webSocketButton.setOnClickListener(new View.OnClickListener() {
+        Button relayLoopBackButton = (Button) findViewById(R.id.relay_loop_back_button);
+        relayLoopBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LocalWebSocketActivity.class);
+                Intent intent = new Intent(MainActivity.this, LocalLoopBackActivity.class);
                 startActivity(intent);
             }
         });

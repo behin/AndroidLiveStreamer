@@ -1,7 +1,6 @@
 package edu.sharif.behin.androidstreamer.network;
 
 import android.util.Log;
-import android.view.SurfaceHolder;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -9,13 +8,10 @@ import java.nio.ByteBuffer;
 import java.util.UUID;
 
 import edu.sharif.behin.androidstreamer.Constants;
-import edu.sharif.behin.androidstreamer.local.LocalLoopBackStream;
-import edu.sharif.behin.androidstreamer.multimedia.AudioDecoder;
 import edu.sharif.behin.androidstreamer.multimedia.AudioEncoder;
 import edu.sharif.behin.androidstreamer.multimedia.AudioPreview;
 import edu.sharif.behin.androidstreamer.multimedia.CameraPreview;
 import edu.sharif.behin.androidstreamer.multimedia.FrameHandler;
-import edu.sharif.behin.androidstreamer.multimedia.VideoDecoder;
 import edu.sharif.behin.androidstreamer.multimedia.VideoEncoder;
 
 /**
@@ -25,7 +21,7 @@ import edu.sharif.behin.androidstreamer.multimedia.VideoEncoder;
 public class SourceWebSocketHandler implements ICommunicationHandler,Closeable {
 
     public interface ISourceWebSocketHandlerStateChangeListener {
-        public void onStateChanged(SourceState oldState,SourceState newState);
+        void onStateChanged(SourceState oldState,SourceState newState);
     }
 
     private FrameHandler frameHandler;
@@ -145,10 +141,10 @@ public class SourceWebSocketHandler implements ICommunicationHandler,Closeable {
 
     private void stopStreaming() {
         try {
-            networkOutputStream.close();
-            frameHandler.close();
             videoEncoder.close();
             audioEncoder.close();
+            frameHandler.close();
+            networkOutputStream.close();
             videoEncoder = null;
             audioEncoder = null;
             frameHandler = null;
@@ -161,6 +157,9 @@ public class SourceWebSocketHandler implements ICommunicationHandler,Closeable {
 
     @Override
     public void close() throws IOException {
+        if(state == SourceState.STREAMING){
+            stopStreaming();
+        }
         serverWebSocketHandler.close();
     }
 }

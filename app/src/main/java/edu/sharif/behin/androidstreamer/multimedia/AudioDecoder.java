@@ -35,6 +35,9 @@ public class AudioDecoder implements Closeable {
                 while(isRunning){
                     try {
                         byte[] frame = handler.getAudioFrame();
+                        if(frame == null){
+                            continue;
+                        }
 
                         ByteBuffer[] inputBuffers = mediaCodec.getInputBuffers();
                         int inputBufferIndex = mediaCodec.dequeueInputBuffer(-1);
@@ -44,7 +47,7 @@ public class AudioDecoder implements Closeable {
                             inputBuffer.put(frame, 0, frame.length);
                             mediaCodec.queueInputBuffer(inputBufferIndex, 0, frame.length, 0, 0);
                         }else{
-                            Log.e("Behin", "input buffer index is negative");
+                            Log.e(AudioDecoder.class.getName(), "input buffer index is negative");
                         }
 
                     } catch (IllegalStateException ise) {

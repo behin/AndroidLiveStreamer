@@ -16,6 +16,7 @@ public class AudioEncoder {
     public static final int AUDIO_BITRATE = 64*1024;
     public static final int AUDIO_SAMPLE_RATE = 44100;
     public static final int AUDIO_CHANNELS = 1;
+    private boolean isRunning = false;
 
     private FrameHandler handler;
     private AudioPreview audioPreview;
@@ -42,6 +43,7 @@ public class AudioEncoder {
     }
 
     public void close() {
+        isRunning = false;
         try {
             audioPreview.setEncoder(null);
             mediaCodec.stop();
@@ -53,6 +55,7 @@ public class AudioEncoder {
     }
 
     public void start(){
+        isRunning = true;
         audioPreview.setEncoder(this);
     }
 
@@ -82,7 +85,9 @@ public class AudioEncoder {
                 outputBufferIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 0);
             }
         } catch (Throwable t) {
-            Log.e(AudioEncoder.class.getName(),"Error Occured : ",t);
+            if(isRunning || !t.getClass().equals(IOException.class)) {
+                Log.e(AudioEncoder.class.getName(), "Error Occurred : ", t);
+            }
         }
 
     }

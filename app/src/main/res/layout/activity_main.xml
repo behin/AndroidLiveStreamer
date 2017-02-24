@@ -11,15 +11,20 @@
     android:orientation="vertical"
     tools:context="edu.sharif.behin.androidstreamer.MainActivity">
     <Button
+        android:id="@+id/buffer_loop_back_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Buffer Loop Back Test"/>
+    <Button
         android:id="@+id/local_loop_back_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Local Loop Back Test"/>
     <Button
-        android:id="@+id/local_web_socket_button"
+        android:id="@+id/relay_loop_back_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Local Web Socket Test"/>
+        android:text="Local Loop Back Test"/>
     <Button
         android:id="@+id/video_streamer"
         android:layout_width="match_parent"

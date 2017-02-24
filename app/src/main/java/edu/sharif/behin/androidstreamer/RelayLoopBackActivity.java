@@ -13,18 +13,12 @@ import android.widget.ImageButton;
 import java.io.IOException;
 
 import edu.sharif.behin.androidstreamer.local.LocalWebSocketServer;
-import edu.sharif.behin.androidstreamer.multimedia.AudioDecoder;
-import edu.sharif.behin.androidstreamer.multimedia.AudioEncoder;
 import edu.sharif.behin.androidstreamer.multimedia.AudioPreview;
 import edu.sharif.behin.androidstreamer.multimedia.CameraPreview;
-import edu.sharif.behin.androidstreamer.multimedia.FrameHandler;
-import edu.sharif.behin.androidstreamer.multimedia.VideoDecoder;
-import edu.sharif.behin.androidstreamer.multimedia.VideoEncoder;
-import edu.sharif.behin.androidstreamer.local.LocalLoopBackStream;
 import edu.sharif.behin.androidstreamer.network.SourceWebSocketHandler;
 import edu.sharif.behin.androidstreamer.network.ViewerWebSocketHandler;
 
-public class LocalWebSocketActivity extends AppCompatActivity implements SourceWebSocketHandler.ISourceWebSocketHandlerStateChangeListener {
+public class RelayLoopBackActivity extends AppCompatActivity {
 
     private CameraPreview cameraPreview;
     private AudioPreview audioPreview;
@@ -39,8 +33,8 @@ public class LocalWebSocketActivity extends AppCompatActivity implements SourceW
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_local_web_socket);
-        setTitle("Local WebSocket Demo");
+        setContentView(R.layout.activity_relay_loop_back);
+        setTitle("Relay Loop Back Demo");
 
         cameraPreview = (CameraPreview) findViewById(R.id.camera);
         audioPreview = (AudioPreview) findViewById(R.id.mic);
@@ -99,6 +93,9 @@ public class LocalWebSocketActivity extends AppCompatActivity implements SourceW
         }catch (IOException e){
             Log.e(LocalWebSocketServer.class.getName(),"Cannot Close Handlers",e);
         }
+
+        cameraPreview.stop();
+        audioPreview.stop();
     }
 
     @Override

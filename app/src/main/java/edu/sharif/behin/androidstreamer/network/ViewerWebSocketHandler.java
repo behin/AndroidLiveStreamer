@@ -150,6 +150,8 @@ public class ViewerWebSocketHandler implements ICommunicationHandler,Closeable {
 
     @Override
     public void close() throws IOException {
+        if(state==ViewerState.PLAYING)
+            stopPlaying();
         serverWebSocketHandler.close();
     }
 }

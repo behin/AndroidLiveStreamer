@@ -29,8 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".BufferLoopBackActivity" />
         <activity android:name=".LocalLoopBackActivity" />
-        <activity android:name=".LocalWebSocketActivity"></activity>
+        <activity android:name=".RelayLoopBackActivity"></activity>
     </application>
 
 </manifest>
