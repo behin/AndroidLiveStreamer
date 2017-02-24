@@ -18,12 +18,10 @@ import edu.sharif.behin.androidstreamer.multimedia.CameraPreview;
 import edu.sharif.behin.androidstreamer.network.SourceWebSocketHandler;
 import edu.sharif.behin.androidstreamer.network.ViewerWebSocketHandler;
 
-public class RelayLoopBackActivity extends AppCompatActivity {
+public class RelayLoopBackActivity extends AppCompatActivity implements SourceWebSocketHandler.ISourceWebSocketHandlerStateChangeListener{
 
     private CameraPreview cameraPreview;
     private AudioPreview audioPreview;
-
-    private LocalWebSocketServer localWebSocketServer;
 
     private SourceWebSocketHandler sourceWebSocketHandler;
     private ViewerWebSocketHandler viewerWebSocketHandler;
@@ -50,13 +48,15 @@ public class RelayLoopBackActivity extends AppCompatActivity {
             }
         });
 
-        localWebSocketServer = new LocalWebSocketServer();
+        AppCompatTextView relayServerTextView = (AppCompatTextView) findViewById(R.id.relay_server);
+        relayServerTextView.setText("Relay Server : "+Constants.SERVER_ADDRESS);
 
-        sourceWebSocketHandler = new SourceWebSocketHandler(Constants.DEFAULT_SOURCE_UUID,cameraPreview,audioPreview,this);
+
+        sourceWebSocketHandler = new SourceWebSocketHandler(Constants.DEFAULT_SOURCE_UUID,Constants.SERVER_ADDRESS,cameraPreview,audioPreview,this);
         view.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                viewerWebSocketHandler = new ViewerWebSocketHandler(Constants.DEFAULT_VIEWER_UUID,view.getHolder().getSurface());
+                viewerWebSocketHandler = new ViewerWebSocketHandler(Constants.DEFAULT_VIEWER_UUID,Constants.SERVER_ADDRESS,view.getHolder().getSurface());
             }
 
             @Override
@@ -89,7 +89,6 @@ public class RelayLoopBackActivity extends AppCompatActivity {
         try {
             sourceWebSocketHandler.close();
             viewerWebSocketHandler.close();
-            localWebSocketServer.close();
         }catch (IOException e){
             Log.e(LocalWebSocketServer.class.getName(),"Cannot Close Handlers",e);
         }

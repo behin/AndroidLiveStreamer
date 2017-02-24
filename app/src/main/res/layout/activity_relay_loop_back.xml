@@ -50,9 +50,17 @@
             android:layout_height="wrap_content"
             android:text="Play"/>
         <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/relay_server"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/local_web_socket_info"/>
+            android:background="#f4eb42"
+            />
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/relay_loop_back_info"/>
+
+
     </LinearLayout>
 
 

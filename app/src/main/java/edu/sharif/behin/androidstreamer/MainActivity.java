@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         relayLoopBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LocalLoopBackActivity.class);
+                Intent intent = new Intent(MainActivity.this, RelayLoopBackActivity.class);
                 startActivity(intent);
             }
         });
