@@ -71,6 +71,14 @@ If you compile and run the application, there are 5 demo tasks inside it.
 * Streamer Demo : A Simple Streamer Demo.
 * Viewer Demo : A Simple Viewer Demo.
 
+## Dependencies 
+There were some awsome libraries we used : 
+* Java Web Socket : repo found at [repo](https://github.com/TooTallNate/Java-WebSocket)
+* Jackson Databind : repo found at [repo](https://github.com/FasterXML/jackson-databind)
+* Apache Commons Collections : site found at [site](https://commons.apache.org/proper/commons-collections/)
+* Apache Commons IO : site found at [site](http://commons.apache.org/proper/commons-io/)
+* Apache Commons Lang : site found at [site](https://commons.apache.org/proper/commons-lang/)
+
 ## License 
 Everything in this repo is licensed under an MIT license. See the LICENSE file for specifics.
 
