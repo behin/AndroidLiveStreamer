@@ -11,10 +11,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.sharif.behin.androidstreamer.local.LocalWebSocketServer;
 import edu.sharif.behin.androidstreamer.multimedia.AudioPreview;
 import edu.sharif.behin.androidstreamer.multimedia.CameraPreview;
+import edu.sharif.behin.androidstreamer.multimedia.FrameHandler;
 import edu.sharif.behin.androidstreamer.network.SourceWebSocketHandler;
 import edu.sharif.behin.androidstreamer.network.ViewerWebSocketHandler;
 
@@ -29,6 +32,7 @@ public class LocalLoopBackActivity extends AppCompatActivity implements SourceWe
     private ViewerWebSocketHandler viewerWebSocketHandler;
 
     private AppCompatTextView sourceStateTextView;
+    private Timer statsUpdateTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,39 @@ public class LocalLoopBackActivity extends AppCompatActivity implements SourceWe
                 }
             }
         });
+
+        final AppCompatTextView statsText = (AppCompatTextView) findViewById(R.id.stats_text);
+
+        ImageButton statsButton = (ImageButton) findViewById(R.id.stats_button);
+        statsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(statsText.getVisibility() == View.VISIBLE){
+                    statsText.setVisibility(View.INVISIBLE);
+                }else {
+                    statsText.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        statsUpdateTimer = new Timer();
+        statsUpdateTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FrameHandler.Stats stats = viewerWebSocketHandler.getStats();
+                        if(stats==null){
+                            statsText.setText("No Stats.");
+                        }else {
+                            statsText.setText("Delay: "+stats.delay+"\nBuffer Threshold: "+stats.bufferThreshold+"\nBuffer Overflow: "+stats.bufferOverflow+"\nCurrent Buffer Size: "+stats.bufferCurrentSize);
+                        }
+                    }
+                });
+
+            }
+        },500,2000);
     }
 
     @Override
@@ -95,6 +132,9 @@ public class LocalLoopBackActivity extends AppCompatActivity implements SourceWe
 
         cameraPreview.stop();
         audioPreview.stop();
+
+        statsUpdateTimer.cancel();
+        statsUpdateTimer.purge();
     }
 
     @Override

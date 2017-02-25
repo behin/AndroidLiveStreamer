@@ -161,4 +161,12 @@ public class ViewerWebSocketHandler implements ICommunicationHandler,Closeable {
         }
         return false;
     }
+
+
+    public FrameHandler.Stats getStats(){
+        if(state == ViewerState.PLAYING){
+            return frameHandler.getStats();
+        }
+        return  null;
+    }
 }

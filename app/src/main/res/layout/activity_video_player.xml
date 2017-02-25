@@ -42,4 +42,22 @@
 
     </LinearLayout>
 
+    <ImageButton
+        android:src="@drawable/stats"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/stats_button"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stats_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/red_state"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

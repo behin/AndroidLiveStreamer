@@ -247,4 +247,20 @@ public class FrameHandler implements Closeable{
         }
 
     }
+
+    public class Stats {
+        public long delay;
+        public int bufferThreshold;
+        public int bufferOverflow;
+        public int bufferCurrentSize;
+    }
+
+    public Stats getStats(){
+        Stats stats = new Stats();
+        stats.delay = localTimestamp - remoteTimestamp;
+        stats.bufferThreshold = bufferThresholdVideo;
+        stats.bufferOverflow = bufferOverflow;
+        stats.bufferCurrentSize = videoFrames.size();
+        return stats;
+    }
 }
