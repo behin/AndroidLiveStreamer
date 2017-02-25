@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.sharif.behin.androidstreamer.local.LocalWebSocketServer;
 import edu.sharif.behin.androidstreamer.multimedia.AudioPreview;
@@ -25,6 +27,7 @@ public class VideoStreamerActivity extends AppCompatActivity implements SourceWe
 
     private SourceWebSocketHandler sourceWebSocketHandler;
     private AppCompatTextView sourceStateTextView;
+    private Timer relayStatusUpdateTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,26 @@ public class VideoStreamerActivity extends AppCompatActivity implements SourceWe
             }
         });
 
-        AppCompatTextView relayServerTextView = (AppCompatTextView) findViewById(R.id.relay_server);
-        relayServerTextView.setText("Relay Server : "+Constants.SERVER_ADDRESS);
+        final AppCompatTextView relayServerTextView = (AppCompatTextView) findViewById(R.id.relay_server);
+        relayStatusUpdateTimer = new Timer();
+        relayStatusUpdateTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(sourceWebSocketHandler.isConnected()) {
+                            relayServerTextView.setText("Relay Server : "+Constants.SERVER_ADDRESS + "(Connected)");
+                            relayServerTextView.setBackgroundColor(getResources().getColor(R.color.green_state));
+                        }else {
+                            relayServerTextView.setText("Relay Server : " + Constants.SERVER_ADDRESS + " (Not Connected)");
+                            relayServerTextView.setBackgroundColor(getResources().getColor(R.color.yellow_state));
+                        }
+                    }
+                });
+
+            }
+        },500,2000);
 
         sourceWebSocketHandler = new SourceWebSocketHandler(Constants.DEFAULT_SOURCE_UUID,Constants.SERVER_ADDRESS,cameraPreview,audioPreview,this);
     }
@@ -63,6 +84,9 @@ public class VideoStreamerActivity extends AppCompatActivity implements SourceWe
 
         cameraPreview.stop();
         audioPreview.stop();
+
+        relayStatusUpdateTimer.cancel();
+        relayStatusUpdateTimer.purge();
     }
 
     @Override

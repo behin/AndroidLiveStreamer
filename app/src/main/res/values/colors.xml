@@ -8,4 +8,7 @@
     <color name="default_playback_indicator">#ffff66</color>
     <color name="default_timecode">#ddffffdd</color>
     <color name="default_background">#000000</color>
+    <color name="green_state">#42f471</color>
+    <color name="yellow_state">#f4f142</color>
+    <color name="red_state">#f47442</color>
 </resources>

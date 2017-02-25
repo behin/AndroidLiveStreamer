@@ -162,4 +162,11 @@ public class SourceWebSocketHandler implements ICommunicationHandler,Closeable {
         }
         serverWebSocketHandler.close();
     }
+
+    public boolean isConnected(){
+        if(serverWebSocketHandler != null){
+            return serverWebSocketHandler.isConnected();
+        }
+        return false;
+    }
 }

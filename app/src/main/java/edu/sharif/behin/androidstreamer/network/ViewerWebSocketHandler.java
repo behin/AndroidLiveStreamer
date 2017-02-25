@@ -154,4 +154,11 @@ public class ViewerWebSocketHandler implements ICommunicationHandler,Closeable {
             stopPlaying();
         serverWebSocketHandler.close();
     }
+
+    public boolean isConnected(){
+        if(serverWebSocketHandler != null){
+            return serverWebSocketHandler.isConnected();
+        }
+        return false;
+    }
 }

@@ -42,6 +42,10 @@ public class ServerWebSocketHandler implements Closeable {
         LOCAL,RELAY
     }
 
+    public boolean isConnected(){
+        return isConnected;
+    }
+
     private WebSocketType type;
 
 

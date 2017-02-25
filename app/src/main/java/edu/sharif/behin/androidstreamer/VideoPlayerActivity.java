@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.sharif.behin.androidstreamer.local.LocalWebSocketServer;
 import edu.sharif.behin.androidstreamer.multimedia.AudioPreview;
@@ -22,6 +24,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
 
     private ViewerWebSocketHandler viewerWebSocketHandler;
+    private Timer relayStatusUpdateTimer;
 
 
     @Override
@@ -34,8 +37,27 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
 
 
-        AppCompatTextView relayServerTextView = (AppCompatTextView) findViewById(R.id.relay_server);
-        relayServerTextView.setText("Relay Server : "+Constants.SERVER_ADDRESS);
+        final AppCompatTextView relayServerTextView = (AppCompatTextView) findViewById(R.id.relay_server);
+
+        relayStatusUpdateTimer = new Timer();
+        relayStatusUpdateTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(viewerWebSocketHandler.isConnected()) {
+                            relayServerTextView.setText("Relay Server : "+Constants.SERVER_ADDRESS + "(Connected)");
+                            relayServerTextView.setBackgroundColor(getResources().getColor(R.color.green_state));
+                        }else {
+                            relayServerTextView.setText("Relay Server : " + Constants.SERVER_ADDRESS + " (Not Connected)");
+                            relayServerTextView.setBackgroundColor(getResources().getColor(R.color.yellow_state));
+                        }
+                    }
+                });
+
+            }
+        },500,2000);
 
 
         view.getHolder().addCallback(new SurfaceHolder.Callback() {
@@ -76,6 +98,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
         }catch (IOException e){
             Log.e(LocalWebSocketServer.class.getName(),"Cannot Close Handlers",e);
         }
+
+        relayStatusUpdateTimer.cancel();
+        relayStatusUpdateTimer.purge();
 
     }
 
