@@ -10,7 +10,7 @@ Each Client is identified by a uuid. It is your job to sync or pair these uuids.
 
 ## Code Example
 
-Source Camera Code :
+Source Camera Example Code :
 ```java
 CameraPreview cameraPreview = (CameraPreview) findViewById(R.id.camera);
 AudioPreview audioPreview = (AudioPreview) findViewById(R.id.mic);
@@ -33,3 +33,45 @@ SourceWebSocketHandler sourceWebSocketHandler =
 * CameraPreview : A widget for camera viewfinder.
 * AudioPreview : A widget for audio waveform viewer
 * SourceWebSocketHandler : A Handler that connects to RelayServer and handle stream commands.
+
+Viewer Example Code : 
+
+```java
+Surface surface = view.getHolder().getSurface();
+ViewerWebSocketHandler viewerWebSocketHandler = 
+        new ViewerWebSocketHandler(VIEWER_UUID,SERVER_ADDRESS,surface);
+```
+
+```xml
+<SurfaceView
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:id="@+id/decodedView" />
+```
+
+* Surface : Surface to show Video On
+* ViewerWebSocketHandler : A Handler that connexts to RelayServer and handle play and stop commands.
+
+To Start Playing in the Viewer : 
+```java
+viewerWebSocketHandler.startPlaying(SOURCE_UUID)
+```
+
+To Stop Playin in the viewer : 
+```java
+viewerWebSocketHandler.stopPlaying()
+```
+
+## Tests
+If you compile and run the application, there are 5 demo tasks inside it.
+
+* Buffer Loop Back Demo : This demo just use the camera , microphone , encoder and decoder and test them.
+* Local Loop Back Demo : In this demo a simple local web socket server opens on the mobile and device emulates both streamer and viewer.
+* Relay Loop Back Demo : In this demo a device acts as both streamer and viewer but the video is pushed from an external RelayServer.
+* Streamer Demo : A Simple Streamer Demo.
+* Viewer Demo : A Simple Viewer Demo.
+
+## License 
+Everything in this repo is licensed under an MIT license. See the LICENSE file for specifics.
+
+
