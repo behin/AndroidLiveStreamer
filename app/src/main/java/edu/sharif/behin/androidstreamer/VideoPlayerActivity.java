@@ -26,8 +26,11 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     private ViewerWebSocketHandler viewerWebSocketHandler;
     private Timer relayStatusUpdateTimer;
-    private Timer statsUpdateTimer;
 
+    private int statsCount;
+    private long maximumLatency;
+    private long sumLatency;
+    private Timer statsUpdateTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
         setTitle("Video Player Demo");
 
         final SurfaceView view = (SurfaceView) findViewById(R.id.decodedView);
-
 
 
         final AppCompatTextView relayServerTextView = (AppCompatTextView) findViewById(R.id.relay_server);
@@ -48,10 +50,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(viewerWebSocketHandler.isConnected()) {
-                            relayServerTextView.setText("Relay Server : "+Constants.SERVER_ADDRESS + "(Connected)");
+                        if (viewerWebSocketHandler.isConnected()) {
+                            relayServerTextView.setText("Relay Server : " + Constants.SERVER_ADDRESS + "(Connected)");
                             relayServerTextView.setBackgroundColor(getResources().getColor(R.color.green_state));
-                        }else {
+                        } else {
                             relayServerTextView.setText("Relay Server : " + Constants.SERVER_ADDRESS + " (Not Connected)");
                             relayServerTextView.setBackgroundColor(getResources().getColor(R.color.yellow_state));
                         }
@@ -59,32 +61,37 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 });
 
             }
-        },500,2000);
+        }, 500, 2000);
 
 
         view.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
-                viewerWebSocketHandler = new ViewerWebSocketHandler(Constants.DEFAULT_VIEWER_UUID,Constants.SERVER_ADDRESS,view.getHolder().getSurface());
+                viewerWebSocketHandler = new ViewerWebSocketHandler(Constants.DEFAULT_VIEWER_UUID, Constants.SERVER_ADDRESS, view.getHolder().getSurface());
             }
 
             @Override
-            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {}
+            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
+            }
 
             @Override
-            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {}
+            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+            }
         });
 
         final Button playStopButton = (Button) findViewById(R.id.play_stop_button);
         playStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(viewerWebSocketHandler.getState() == ViewerWebSocketHandler.ViewerState.STOPPED){
-                    if(viewerWebSocketHandler.startPlaying(Constants.DEFAULT_SOURCE_UUID)) {
+                if (viewerWebSocketHandler.getState() == ViewerWebSocketHandler.ViewerState.STOPPED) {
+                    if (viewerWebSocketHandler.startPlaying(Constants.DEFAULT_SOURCE_UUID)) {
+                        statsCount = 0;
+                        sumLatency = 0;
+                        maximumLatency = 0;
                         playStopButton.setText("Stop");
                     }
-                }else {
-                    if(viewerWebSocketHandler.stopPlaying()){
+                } else {
+                    if (viewerWebSocketHandler.stopPlaying()) {
                         playStopButton.setText("Play");
                     }
                 }
@@ -97,9 +104,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
         statsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(statsText.getVisibility() == View.VISIBLE){
+                if (statsText.getVisibility() == View.VISIBLE) {
                     statsText.setVisibility(View.INVISIBLE);
-                }else {
+                } else {
                     statsText.setVisibility(View.VISIBLE);
                 }
             }
@@ -113,16 +120,27 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         FrameHandler.Stats stats = viewerWebSocketHandler.getStats();
-                        if(stats==null){
+                        if (stats == null) {
                             statsText.setText("No Stats.");
-                        }else {
-                            statsText.setText("Delay: "+stats.delay+"\nBuffer Threshold: "+stats.bufferThreshold+"\nBuffer Overflow: "+stats.bufferOverflow+"\nCurrent Buffer Size: "+stats.bufferCurrentSize);
+                        } else {
+                            statsCount++;
+                            if(stats.delay> maximumLatency){
+                                maximumLatency = stats.delay;
+                            }
+                            sumLatency += stats.delay;
+                            statsText.setText("Latency: " + stats.delay +
+                                    "\nBuffer Threshold: " + stats.bufferThreshold +
+                                    "\nBuffer Overflow: " + stats.bufferOverflow +
+                                    "\nCurrent Buffer Size: " + stats.bufferCurrentSize +
+                                    "\nAverage Latency: " + (sumLatency/statsCount)+
+                                    "\nMaximum Latency: " + maximumLatency
+                            );
                         }
                     }
                 });
 
             }
-        },500,2000);
+        }, 500, 2000);
     }
 
     @Override
@@ -130,8 +148,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
         super.onStop();
         try {
             viewerWebSocketHandler.close();
-        }catch (IOException e){
-            Log.e(LocalWebSocketServer.class.getName(),"Cannot Close Handlers",e);
+        } catch (IOException e) {
+            Log.e(LocalWebSocketServer.class.getName(), "Cannot Close Handlers", e);
         }
 
         relayStatusUpdateTimer.cancel();

@@ -32,6 +32,10 @@ public class LocalLoopBackActivity extends AppCompatActivity implements SourceWe
     private ViewerWebSocketHandler viewerWebSocketHandler;
 
     private AppCompatTextView sourceStateTextView;
+
+    private int statsCount;
+    private long maximumLatency;
+    private long sumLatency;
     private Timer statsUpdateTimer;
 
     @Override
@@ -76,6 +80,9 @@ public class LocalLoopBackActivity extends AppCompatActivity implements SourceWe
             public void onClick(View v) {
                 if(viewerWebSocketHandler.getState() == ViewerWebSocketHandler.ViewerState.STOPPED){
                     if(viewerWebSocketHandler.startPlaying(Constants.DEFAULT_SOURCE_UUID)) {
+                        statsCount = 0;
+                        sumLatency = 0;
+                        maximumLatency = 0;
                         playStopButton.setText("Stop");
                     }
                 }else {
@@ -108,16 +115,27 @@ public class LocalLoopBackActivity extends AppCompatActivity implements SourceWe
                     @Override
                     public void run() {
                         FrameHandler.Stats stats = viewerWebSocketHandler.getStats();
-                        if(stats==null){
+                        if (stats == null) {
                             statsText.setText("No Stats.");
-                        }else {
-                            statsText.setText("Delay: "+stats.delay+"\nBuffer Threshold: "+stats.bufferThreshold+"\nBuffer Overflow: "+stats.bufferOverflow+"\nCurrent Buffer Size: "+stats.bufferCurrentSize);
+                        } else {
+                            statsCount++;
+                            if(stats.delay> maximumLatency){
+                                maximumLatency = stats.delay;
+                            }
+                            sumLatency += stats.delay;
+                            statsText.setText("Latency: " + stats.delay +
+                                    "\nBuffer Threshold: " + stats.bufferThreshold +
+                                    "\nBuffer Overflow: " + stats.bufferOverflow +
+                                    "\nCurrent Buffer Size: " + stats.bufferCurrentSize +
+                                    "\nAverage Latency: " + (sumLatency/statsCount)+
+                                    "\nMaximum Latency: " + maximumLatency
+                            );
                         }
                     }
                 });
 
             }
-        },500,2000);
+        }, 500, 2000);
     }
 
     @Override
