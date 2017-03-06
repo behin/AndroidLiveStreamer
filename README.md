@@ -6,7 +6,7 @@ Each client will connect to the relay server using websocket. Commands will be s
 To compile this project you need the following components.
 * Android Studio 2.2.3 or later
 * Android SDK Api Level 16 or later
-* Other dependencies resolves using Maven
+* Other dependencies resolves using Gradle
 
 ## Installation
 To use this project and stream live video between two android device you need to run a [RelayServer](https://github.com/behin/RelayServer) on an IP address that is visible by both sides. Generaly you need to run it on a cloud based server, in some applications the server can be local. Then the IP and Port of the Server must set in the Constants.java file.
