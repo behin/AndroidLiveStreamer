@@ -2,7 +2,7 @@
 A Live Video Streaming Library on Android Devices. An Android device with camera is the video source, and another will be the video player. This project uses a relay server to connect two devices.
 Each client will connect to the relay server using websocket. Commands will be sent using the Text channel of the web socket and the video data will be sent using binary channel.
 
-# Requirements
+## Requirements
 To compile this project you need the following components.
 * Android Studio 2.2.3 or later
 * Android SDK Api Level 16 or later
