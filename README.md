@@ -2,9 +2,17 @@
 A Live Video Streaming Library on Android Devices. An Android device with camera is the video source, and another will be the video player. This project uses a relay server to connect two devices.
 Each client will connect to the relay server using websocket. Commands will be sent using the Text channel of the web socket and the video data will be sent using binary channel.
 
+# Requirements
+To compile this project you need the following components.
+* Android Studio 2.2.3 or later
+* Android SDK Api Level 16 or later
+* Other dependencies resolves using Maven
+
 ## Installation
 To use this project and stream live video between two android device you need to run a [RelayServer](https://github.com/behin/RelayServer) on an IP address that is visible by both sides. Generaly you need to run it on a cloud based server, in some applications the server can be local. Then the IP and Port of the Server must set in the Constants.java file.
-After that you can test the connection using relay loop back demo. 
+After that you can test the connection using relay loop back demo.
+
+Local loop back demo and Buffer loop back demo does not need any Relay Servers.
 
 Each Client is identified by a uuid. It is your job to sync or pair these uuids. As a sample two uuid hardcoded in the application Constants.java. A client needs to know the other uuid to connect to them.
 
